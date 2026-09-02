@@ -1,6 +1,7 @@
 package io.wispforest.owo.ui.component;
 
 import io.wispforest.owo.ui.core.Sizing;
+import io.wispforest.owo.ui.inject.ComponentStub;
 import io.wispforest.owo.ui.parsing.UIModel;
 import io.wispforest.owo.ui.parsing.UIParsing;
 import io.wispforest.owo.util.EventSource;
@@ -17,7 +18,7 @@ import org.w3c.dom.Element;
 import java.util.Map;
 import java.util.function.Function;
 
-public class SliderComponent extends SliderWidget {
+public class SliderComponent extends SliderWidget implements ComponentStub {
 
     protected final EventStream<OnChanged> changedEvents = OnChanged.newStream();
     protected final EventStream<OnSlideEnd> slideEndEvents = OnSlideEnd.newStream();
@@ -92,18 +93,18 @@ public class SliderComponent extends SliderWidget {
 
     @Override
     public boolean onMouseScroll(double mouseX, double mouseY, double amount) {
-        if (!this.active) return super.onMouseScroll(mouseX, mouseY, amount);
+        if (!this.active) return ComponentStub.super.onMouseScroll(mouseX, mouseY, amount);
 
         this.value(this.value + this.scrollStep * amount);
 
-        super.onMouseScroll(mouseX, mouseY, amount);
+        ComponentStub.super.onMouseScroll(mouseX, mouseY, amount);
         return true;
     }
 
     @Override
     public boolean onMouseUp(Click click) {
         this.slideEndEvents.sink().onSlideEnd();
-        return super.onMouseUp(click);
+        return ComponentStub.super.onMouseUp(click);
     }
 
     @Override
@@ -119,7 +120,7 @@ public class SliderComponent extends SliderWidget {
 
     @Override
     public void parseProperties(UIModel model, Element element, Map<String, Element> children) {
-        super.parseProperties(model, element, children);
+        ComponentStub.super.parseProperties(model, element, children);
 
         if (children.containsKey("text")) {
             var node = children.get("text");

@@ -1,6 +1,7 @@
 package io.wispforest.owo.mixin.ui;
 
 import io.wispforest.owo.ui.core.Component;
+import io.wispforest.owo.ui.inject.ComponentStub;
 import io.wispforest.owo.ui.inject.GreedyInputComponent;
 import net.minecraft.client.gui.widget.EditBoxWidget;
 import net.minecraft.client.gui.widget.ScrollableWidget;
@@ -16,7 +17,7 @@ public abstract class EditBoxWidgetMixin extends ScrollableWidget implements Gre
 
     @Override
     public void onFocusGained(Component.FocusSource source) {
-        super.onFocusGained(source);
+        ((ComponentStub) (Object) this).widgetWrapper().onFocusGained(source);
         this.setFocused(true);
     }
 

@@ -112,11 +112,12 @@ public class VanillaWidgetComponent extends BaseComponent {
     private void applyToWidget() {
         var accessor = (ClickableWidgetAccessor) this.widget;
 
-        accessor.owo$setX(this.x + this.widget.xOffset());
-        accessor.owo$setY(this.y + this.widget.yOffset());
+        var component = (io.wispforest.owo.ui.inject.ComponentStub) this.widget;
+        accessor.owo$setX(this.x + component.xOffset());
+        accessor.owo$setY(this.y + component.yOffset());
 
-        accessor.owo$setWidth(this.width + this.widget.widthOffset());
-        accessor.owo$setHeight(this.height + this.widget.heightOffset());
+        accessor.owo$setWidth(this.width + component.widthOffset());
+        accessor.owo$setHeight(this.height + component.heightOffset());
     }
 
     @Override

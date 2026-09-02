@@ -13,7 +13,6 @@ import io.wispforest.owo.ui.core.*;
 import io.wispforest.owo.ui.util.UISounds;
 import io.wispforest.owo.util.NumberReflection;
 import io.wispforest.owo.util.ReflectionUtils;
-import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.resource.language.I18n;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
@@ -30,7 +29,7 @@ public class ListOptionContainer<T> extends CollapsibleContainer implements Opti
     protected final Option<List<T>> backingOption;
     protected final List<T> backingList;
 
-    protected final ButtonWidget resetButton;
+    protected final ButtonComponent resetButton;
 
     @SuppressWarnings("unchecked")
     public ListOptionContainer(Option<List<T>> option) {

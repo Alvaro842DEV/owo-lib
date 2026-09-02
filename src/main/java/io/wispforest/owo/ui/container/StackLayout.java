@@ -49,8 +49,8 @@ public class StackLayout extends BaseParentComponent {
             child.mount(this, this.x + this.padding.get().left() + child.margins().get().left(), this.y + this.padding.get().top() + child.margins().get().top());
 
             var fullChildSize = child.fullSize();
-            layoutWidth.setValue(Math.max(layoutWidth.getValue(), fullChildSize.width()));
-            layoutHeight.setValue(Math.max(layoutHeight.getValue(), fullChildSize.height()));
+            layoutWidth.setValue(Math.max(layoutWidth.intValue(), fullChildSize.width()));
+            layoutHeight.setValue(Math.max(layoutHeight.intValue(), fullChildSize.height()));
         });
 
         this.contentSize = Size.of(layoutWidth.intValue(), layoutHeight.intValue());

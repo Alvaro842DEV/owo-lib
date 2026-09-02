@@ -7,6 +7,7 @@ import io.wispforest.owo.ui.core.Color;
 import io.wispforest.owo.ui.core.CursorStyle;
 import io.wispforest.owo.ui.core.Size;
 import io.wispforest.owo.ui.core.Sizing;
+import io.wispforest.owo.ui.inject.ComponentStub;
 import io.wispforest.owo.ui.parsing.UIModel;
 import io.wispforest.owo.ui.parsing.UIParsing;
 import io.wispforest.owo.util.EventSource;
@@ -27,7 +28,7 @@ import org.w3c.dom.Element;
 import java.util.Map;
 import java.util.function.Consumer;
 
-public class TextAreaComponent extends EditBoxWidget {
+public class TextAreaComponent extends EditBoxWidget implements ComponentStub {
 
     protected final Observable<String> textValue = Observable.of("");
     protected final EventStream<OnChanged> changedEvents = OnChanged.newStream();
@@ -60,7 +61,7 @@ public class TextAreaComponent extends EditBoxWidget {
 
     @Override
     public void update(float delta, int mouseX, int mouseY) {
-        super.update(delta, mouseX, mouseY);
+        ComponentStub.super.update(delta, mouseX, mouseY);
         this.cursorStyle(this.overflows() && mouseX >= this.getX() + this.width - 9 ? CursorStyle.NONE : CursorStyle.TEXT);
     }
 
@@ -115,7 +116,7 @@ public class TextAreaComponent extends EditBoxWidget {
 
     @Override
     public void inflate(Size space) {
-        super.inflate(space);
+        ComponentStub.super.inflate(space);
 
         int cursor = this.editBox.getCursor();
         int selection = ((EditBoxAccessor) this.editBox).owo$getSelectionEnd();
@@ -123,7 +124,7 @@ public class TextAreaComponent extends EditBoxWidget {
         ((EditBoxAccessor) this.editBox).owo$setWidth(this.width() - this.getPadding() - 9);
         this.editBox.setText(this.getText(), false);
 
-        super.inflate(space);
+        ComponentStub.super.inflate(space);
         this.editBox.setText(this.getText(), false);
 
         this.editBox.moveCursor(CursorMovement.ABSOLUTE, cursor);
@@ -164,7 +165,7 @@ public class TextAreaComponent extends EditBoxWidget {
 
     @Override
     public void parseProperties(UIModel model, Element element, Map<String, Element> children) {
-        super.parseProperties(model, element, children);
+        ComponentStub.super.parseProperties(model, element, children);
 
         UIParsing.apply(children, "display-char-count", UIParsing::parseBool, this::displayCharCount);
         UIParsing.apply(children, "max-length", UIParsing::parseUnsignedInt, this::setMaxLength);

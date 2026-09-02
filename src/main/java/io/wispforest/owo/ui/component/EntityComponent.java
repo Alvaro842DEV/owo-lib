@@ -40,6 +40,7 @@ import net.minecraft.util.ErrorReporter;
 import net.minecraft.util.PlayerInput;
 import net.minecraft.util.Util;
 import net.minecraft.util.math.RotationAxis;
+import net.neoforged.neoforge.network.connection.ConnectionType;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Matrix4f;
 import org.lwjgl.glfw.GLFW;
@@ -263,7 +264,8 @@ public class EntityComponent<E extends Entity> extends BaseComponent {
                         MinecraftClient.getInstance().world.getRegistryManager().toImmutable(),
                         MinecraftClient.getInstance().world.getEnabledFeatures(),
                         "Wisp Forest Enterprises", null, null, Map.of(), null, Map.of(), ServerLinks.EMPTY, Map.of(),
-                        true
+                        true,
+                        ConnectionType.OTHER
                     )),
                 null, null, PlayerInput.DEFAULT, false
             );

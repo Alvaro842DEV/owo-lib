@@ -8,11 +8,13 @@ import io.wispforest.owo.ui.core.Color;
 import io.wispforest.owo.ui.core.CursorStyle;
 import io.wispforest.owo.ui.core.OwoUIDrawContext;
 import io.wispforest.owo.ui.core.Sizing;
+import io.wispforest.owo.ui.inject.ComponentStub;
 import io.wispforest.owo.ui.parsing.UIModel;
 import io.wispforest.owo.ui.parsing.UIModelParsingException;
 import io.wispforest.owo.ui.parsing.UIParsing;
 import io.wispforest.owo.ui.util.NinePatchTexture;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.font.DrawnTextConsumer;
 import net.minecraft.client.gl.RenderPipelines;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.tooltip.HoveredTooltipPositioner;
@@ -26,7 +28,7 @@ import org.w3c.dom.Node;
 import java.util.Map;
 import java.util.function.Consumer;
 
-public class ButtonComponent extends ButtonWidget {
+public class ButtonComponent extends ButtonWidget implements ComponentStub {
 
     public static final Identifier ACTIVE_TEXTURE = Identifier.of("owo", "button/active");
     public static final Identifier HOVERED_TEXTURE = Identifier.of("owo", "button/hovered");
@@ -35,13 +37,13 @@ public class ButtonComponent extends ButtonWidget {
     protected Renderer renderer = Renderer.VANILLA;
     protected boolean textShadow = true;
 
-    protected ButtonComponent(Text message, Consumer<ButtonComponent> onPress) {
+    protected ButtonComponent(net.minecraft.text.Text message, Consumer<ButtonComponent> onPress) {
         super(0, 0, 0, 0, message, button -> onPress.accept((ButtonComponent) button), ButtonWidget.DEFAULT_NARRATION_SUPPLIER);
         this.sizing(Sizing.content());
     }
 
     @Override
-    public void renderWidget(DrawContext context, int mouseX, int mouseY, float delta) {
+    protected void drawIcon(DrawContext context, int mouseX, int mouseY, float delta) {
         this.renderer.draw((OwoUIDrawContext) context, this, delta);
 
         var textRenderer = MinecraftClient.getInstance().textRenderer;
@@ -56,6 +58,10 @@ public class ButtonComponent extends ButtonWidget {
         var tooltip = ((ClickableWidgetAccessor) this).owo$getTooltip();
         if (this.hovered && tooltip.getTooltip() != null)
             context.drawTooltip(textRenderer, tooltip.getTooltip().getLines(MinecraftClient.getInstance()), HoveredTooltipPositioner.INSTANCE, mouseX, mouseY, false);
+    }
+
+    @Override
+    protected void drawLabel(DrawnTextConsumer textConsumer) {
     }
 
     public ButtonComponent onPress(Consumer<ButtonComponent> onPress) {
@@ -92,7 +98,7 @@ public class ButtonComponent extends ButtonWidget {
 
     @Override
     public void parseProperties(UIModel model, Element element, Map<String, Element> children) {
-        super.parseProperties(model, element, children);
+        ComponentStub.super.parseProperties(model, element, children);
         UIParsing.apply(children, "text", UIParsing::parseText, this::setMessage);
         UIParsing.apply(children, "text-shadow", UIParsing::parseBool, this::textShadow);
         UIParsing.apply(children, "renderer", Renderer::parse, this::renderer);

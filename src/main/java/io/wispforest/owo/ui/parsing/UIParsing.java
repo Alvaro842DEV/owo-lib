@@ -28,7 +28,8 @@ public class UIParsing {
      * @deprecated In order to more properly separate factories added by different
      * mods, use {@link #registerFactory(Identifier, Function)}, which takes an
      * identifier instead
-     */
+    */
+    @Deprecated
     @ApiStatus.Internal
     public static void registerFactory(String componentTagName, Function<Element, Component> factory) {
         if (COMPONENT_FACTORIES.containsKey(componentTagName)) {

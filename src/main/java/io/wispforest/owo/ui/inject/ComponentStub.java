@@ -5,13 +5,16 @@ import io.wispforest.owo.ui.core.*;
 import io.wispforest.owo.ui.event.*;
 import io.wispforest.owo.ui.util.FocusHandler;
 import io.wispforest.owo.util.EventSource;
+import net.minecraft.client.gui.widget.ClickableWidget;
 import net.minecraft.client.gui.Click;
 import net.minecraft.client.gui.tooltip.TooltipComponent;
 import net.minecraft.client.input.CharInput;
 import net.minecraft.client.input.KeyInput;
 import org.jetbrains.annotations.Nullable;
+import org.w3c.dom.Element;
 
 import java.util.List;
+import java.util.Map;
 import java.util.function.Consumer;
 
 /**
@@ -108,7 +111,7 @@ public interface ComponentStub extends Component {
 
     @Override
     default void inflate(Size space) {
-        throw new IllegalStateException("Interface stub method called");
+        this.widgetWrapper().inflate(space);
     }
 
     @Override
@@ -148,7 +151,7 @@ public interface ComponentStub extends Component {
 
     @Override
     default boolean onMouseUp(Click click) {
-        throw new IllegalStateException("Interface stub method called");
+        return this.widgetWrapper().onMouseUp(click);
     }
 
     @Override
@@ -158,7 +161,7 @@ public interface ComponentStub extends Component {
 
     @Override
     default boolean onMouseScroll(double mouseX, double mouseY, double amount) {
-        throw new IllegalStateException("Interface stub method called");
+        return this.widgetWrapper().onMouseScroll(mouseX, mouseY, amount);
     }
 
     @Override
@@ -223,7 +226,7 @@ public interface ComponentStub extends Component {
 
     @Override
     default void updateX(int x) {
-        throw new IllegalStateException("Interface stub method called");
+        this.widgetWrapper().updateX(x);
     }
 
     @Override
@@ -233,7 +236,7 @@ public interface ComponentStub extends Component {
 
     @Override
     default void updateY(int y) {
-        throw new IllegalStateException("Interface stub method called");
+        this.widgetWrapper().updateY(y);
     }
 
     @Override
@@ -264,5 +267,19 @@ public interface ComponentStub extends Component {
 
     default int heightOffset() {
         throw new IllegalStateException("Interface stub method called");
+    }
+
+    @Override
+    default void update(float delta, int mouseX, int mouseY) {
+        this.widgetWrapper().update(delta, mouseX, mouseY);
+    }
+
+    @Override
+    default void parseProperties(io.wispforest.owo.ui.parsing.UIModel model, Element element, Map<String, Element> children) {
+        Component.super.parseProperties(model, element, children);
+
+        if (this instanceof ClickableWidget widget) {
+            io.wispforest.owo.ui.parsing.UIParsing.apply(children, "active", io.wispforest.owo.ui.parsing.UIParsing::parseBool, active -> widget.active = active);
+        }
     }
 }

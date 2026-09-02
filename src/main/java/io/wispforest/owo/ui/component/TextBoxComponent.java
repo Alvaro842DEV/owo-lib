@@ -4,6 +4,7 @@ import io.wispforest.owo.mixin.ui.access.TextFieldWidgetAccessor;
 import io.wispforest.owo.ui.core.CursorStyle;
 import io.wispforest.owo.ui.core.OwoUIDrawContext;
 import io.wispforest.owo.ui.core.Sizing;
+import io.wispforest.owo.ui.inject.ComponentStub;
 import io.wispforest.owo.ui.parsing.UIModel;
 import io.wispforest.owo.ui.parsing.UIParsing;
 import io.wispforest.owo.util.EventSource;
@@ -19,7 +20,7 @@ import org.w3c.dom.Element;
 import java.util.Map;
 import java.util.function.Consumer;
 
-public class TextBoxComponent extends TextFieldWidget {
+public class TextBoxComponent extends TextFieldWidget implements ComponentStub {
 
     protected final Observable<Boolean> showsBackground = Observable.of(((TextFieldWidgetAccessor) this).owo$drawsBackground());
 
@@ -63,13 +64,13 @@ public class TextBoxComponent extends TextFieldWidget {
 
     @Override
     public void updateX(int x) {
-        super.updateX(x);
+        ComponentStub.super.updateX(x);
         ((TextFieldWidgetAccessor) this).owo$updateTextPosition();
     }
 
     @Override
     public void updateY(int y) {
-        super.updateY(y);
+        ComponentStub.super.updateY(y);
         ((TextFieldWidgetAccessor) this).owo$updateTextPosition();
     }
 
@@ -91,7 +92,7 @@ public class TextBoxComponent extends TextFieldWidget {
 
     @Override
     public void parseProperties(UIModel spec, Element element, Map<String, Element> children) {
-        super.parseProperties(spec, element, children);
+        ComponentStub.super.parseProperties(spec, element, children);
         UIParsing.apply(children, "show-background", UIParsing::parseBool, this::setDrawsBackground);
         UIParsing.apply(children, "max-length", UIParsing::parseUnsignedInt, this::setMaxLength);
         UIParsing.apply(children, "text", e -> e.getTextContent().strip(), this::text);
