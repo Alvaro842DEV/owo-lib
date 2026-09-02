@@ -6,6 +6,7 @@ import io.wispforest.endec.format.bytebuf.ByteBufDeserializer;
 import io.wispforest.endec.format.bytebuf.ByteBufSerializer;
 import io.wispforest.endec.impl.RecordEndec;
 import io.wispforest.endec.impl.StructEndecBuilder;
+import io.wispforest.endec.util.EndecBuffer;
 import net.minecraft.network.PacketByteBuf;
 
 import java.util.LinkedList;
@@ -25,8 +26,8 @@ public class UwuNetworkTest {
 
         testSerialization(test, testRecord -> {
             var buffer = new PacketByteBuf(Unpooled.buffer());
-            buffer.write(serializer, test);
-            return buffer.read(serializer);
+            ((EndecBuffer) buffer).write(serializer, test);
+            return ((EndecBuffer) buffer).read(serializer);
         });
 
         //--

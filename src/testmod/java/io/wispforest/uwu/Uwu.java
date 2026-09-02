@@ -13,6 +13,8 @@ import io.wispforest.endec.format.gson.GsonDeserializer;
 import io.wispforest.endec.format.gson.GsonEndec;
 import io.wispforest.endec.format.gson.GsonSerializer;
 import io.wispforest.endec.impl.StructEndecBuilder;
+import io.wispforest.endec.util.EndecBuffer;
+import io.wispforest.endec.util.MapCarrier;
 import io.wispforest.owo.Owo;
 import io.wispforest.owo.config.ConfigSynchronizer;
 import io.wispforest.owo.config.Option;
@@ -75,6 +77,7 @@ import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.loading.FMLLoader;
 import net.neoforged.neoforge.common.NeoForge;
+import net.neoforged.neoforge.network.connection.ConnectionType;
 import net.neoforged.neoforge.event.RegisterCommandsEvent;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import net.neoforged.neoforge.registries.RegisterEvent;
@@ -216,7 +219,7 @@ public class Uwu {
         var serializer = ByteBufSerializer.of(new PacketByteBuf(Unpooled.buffer()));
         stackEndec.encode(SerializationContext.empty(), serializer, stacknite);
 
-        System.out.println(serializer.result().read(SerializationContext.empty(), stackEndec));
+        System.out.println(((EndecBuffer) serializer.result()).read(SerializationContext.empty(), stackEndec));
         System.out.println(CodecUtils.toCodec(MinecraftEndecs.BLOCK_POS).encodeStart(NbtOps.INSTANCE, new BlockPos(34, 35, 69)).result().get());
 
         TagInjector.inject(Registries.BLOCK, BlockTags.BASE_STONE_OVERWORLD.id(), Blocks.GLASS);
@@ -416,18 +419,19 @@ public class Uwu {
 
                             NbtCompound compound = new NbtCompound();
 
-                            compound.put(variable1Endec, variable1);
-                            compound.put(variable2Endec, variable2);
-                            compound.put(variable3Endec, variable3);
+                            var carrier = (MapCarrier) (Object) compound;
+                            carrier.put(variable1Endec, variable1);
+                            carrier.put(variable2Endec, variable2);
+                            carrier.put(variable3Endec, variable3);
 
                             LOGGER.info("");
                             LOGGER.info(compound.asString().get());
 
                             LOGGER.info("");
 
-                            LOGGER.info(compound.get(variable1Endec));
-                            LOGGER.info(compound.get(variable2Endec).toString());
-                            LOGGER.info(compound.get(variable3Endec).toString());
+                            LOGGER.info(carrier.get(variable1Endec));
+                            LOGGER.info(carrier.get(variable2Endec).toString());
+                            LOGGER.info(carrier.get(variable3Endec).toString());
 
                             LOGGER.info("---");
                             LOGGER.info("");
@@ -451,9 +455,9 @@ public class Uwu {
                         try {
                             iterations("Endec", (buf) -> {
                                 ItemStack stack = source.getPlayer().getStackInHand(Hand.MAIN_HAND);
-                                buf.write(SerializationContext.attributes(RegistriesAttribute.of(context.getSource().getWorld().getRegistryManager())), MinecraftEndecs.ITEM_STACK, stack);
+                                ((EndecBuffer) buf).write(SerializationContext.attributes(RegistriesAttribute.of(context.getSource().getWorld().getRegistryManager())), MinecraftEndecs.ITEM_STACK, stack);
 
-                                var stackFromByte = buf.read(SerializationContext.attributes(RegistriesAttribute.of(context.getSource().getWorld().getRegistryManager())), MinecraftEndecs.ITEM_STACK);
+                                var stackFromByte = ((EndecBuffer) buf).read(SerializationContext.attributes(RegistriesAttribute.of(context.getSource().getWorld().getRegistryManager())), MinecraftEndecs.ITEM_STACK);
                             });
                         } catch (Exception exception){
                             LOGGER.info(exception.getMessage());
@@ -485,7 +489,7 @@ public class Uwu {
             durations.clear();
 
             for (int i = 0; i < maxIterations; i++) {
-                RegistryByteBuf buf = new RegistryByteBuf(Unpooled.buffer(), Owo.currentServer().getRegistryManager());
+                RegistryByteBuf buf = new RegistryByteBuf(Unpooled.buffer(), Owo.currentServer().getRegistryManager(), ConnectionType.OTHER);
 
                 long startTime = System.nanoTime();
 

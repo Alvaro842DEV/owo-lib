@@ -1,6 +1,8 @@
 package io.wispforest.uwu.items;
 
 import io.wispforest.endec.Endec;
+import io.wispforest.owo.ext.OwoItem;
+import io.wispforest.owo.serialization.OwoComponentTypeBuilder;
 import net.minecraft.component.ComponentChanges;
 import net.minecraft.component.ComponentMap;
 import net.minecraft.component.ComponentType;
@@ -19,11 +21,11 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.Rarity;
 import net.minecraft.world.World;
 
-public class UwuCounterItem extends Item {
+public class UwuCounterItem extends Item implements OwoItem {
     private static final ComponentType<Integer> COUNT = Registry.register(
         Registries.DATA_COMPONENT_TYPE,
         Identifier.of("uwu", "count"),
-        ComponentType.<Integer>builder()
+        ((OwoComponentTypeBuilder<Integer>) (Object) ComponentType.<Integer>builder())
             .endec(Endec.INT)
             .build()
     );

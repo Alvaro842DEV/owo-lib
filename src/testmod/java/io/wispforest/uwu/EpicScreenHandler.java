@@ -1,6 +1,7 @@
 package io.wispforest.uwu;
 
 import io.wispforest.owo.client.screens.ScreenUtils;
+import io.wispforest.owo.client.screens.OwoScreenHandler;
 import io.wispforest.owo.client.screens.SlotGenerator;
 import io.wispforest.owo.client.screens.SyncedProperty;
 import net.minecraft.component.DataComponentTypes;
@@ -16,7 +17,7 @@ import net.minecraft.text.Text;
 
 import java.util.concurrent.ThreadLocalRandom;
 
-public class EpicScreenHandler extends ScreenHandler {
+public class EpicScreenHandler extends ScreenHandler implements OwoScreenHandler {
     private static final char[] VOWELS = {'a', 'e', 'i', 'o', 'u'};
     private static final char[] CONSONANTS = {'b', 'c', 'd', 'f', 'g', 'h', 'j', 'k', 'l', 'm', 'n', 'p', 'q', 'r', 's', 't', 'v', 'w', 'x', 'y', 'z'};
 

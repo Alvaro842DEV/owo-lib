@@ -6,6 +6,7 @@ import io.wispforest.owo.particles.systems.ParticleSystemController;
 import io.wispforest.owo.ui.component.ButtonComponent;
 import io.wispforest.owo.ui.component.Components;
 import io.wispforest.owo.ui.component.EntityComponent;
+import io.wispforest.owo.ui.component.TextBoxComponent;
 import io.wispforest.owo.ui.container.Containers;
 import io.wispforest.owo.ui.container.FlowLayout;
 import io.wispforest.owo.ui.core.*;
@@ -137,7 +138,7 @@ public class UwuClient {
                                     UISounds.playInteractionSound();
                                     return true;
                                 });
-                            })).child(Components.textBox(Sizing.fixed(100), "allay text").<TextFieldWidget>configure(textBox -> {
+                            })).child(Components.textBox(Sizing.fixed(100), "allay text").<TextBoxComponent>configure(textBox -> {
                                 textBox.verticalSizing(Sizing.fixed(9));
                                 textBox.setDrawsBackground(false);
                             })).<FlowLayout>configure(layout -> {

@@ -3,9 +3,9 @@ package io.wispforest.uwu.client;
 import io.wispforest.owo.ui.base.BaseUIModelScreen;
 import io.wispforest.owo.ui.component.ButtonComponent;
 import io.wispforest.owo.ui.component.SliderComponent;
+import io.wispforest.owo.ui.component.TextBoxComponent;
 import io.wispforest.owo.ui.container.FlowLayout;
 import io.wispforest.owo.ui.core.Component;
-import net.minecraft.client.gui.widget.TextFieldWidget;
 
 import java.util.Map;
 
@@ -36,7 +36,7 @@ public class UwuConfigScreen extends BaseUIModelScreen<FlowLayout> {
                 )
         );
 
-        var valueBox = option.childById(TextFieldWidget.class, "value-box");
+        var valueBox = option.childById(TextBoxComponent.class, "value-box");
         option.childById(ButtonComponent.class, "reset-button").onPress(button -> {
             valueBox.setText(String.valueOf(index * index));
         });

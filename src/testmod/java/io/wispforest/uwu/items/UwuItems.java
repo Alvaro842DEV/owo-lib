@@ -1,6 +1,7 @@
 package io.wispforest.uwu.items;
 
 import io.wispforest.uwu.Uwu;
+import io.wispforest.owo.itemgroup.OwoItemSettingsExtension;
 import net.minecraft.item.Item;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
@@ -17,7 +18,15 @@ public class UwuItems {
     public static final Item COUNTER = register("counter", UwuCounterItem::new);
 
     public static class OwoCompatItems {
-        public static final Item OWO_COMPAT_ITEM = register(Identifier.of("owo", "owo_compat_item"), new Item.Settings().group(Uwu.FOUR_TAB_GROUP).tab(2));
+        public static final Item OWO_COMPAT_ITEM = register(Identifier.of("owo", "owo_compat_item"), owoCompatSettings());
+
+        private static Item.Settings owoCompatSettings() {
+            var settings = new Item.Settings();
+            var extension = (OwoItemSettingsExtension) (Object) settings;
+            extension.group(() -> Uwu.FOUR_TAB_GROUP);
+            extension.tab(2);
+            return settings;
+        }
     }
 
     public static <T extends Item> T register(String path, Function<Item.Settings, T> factory) {

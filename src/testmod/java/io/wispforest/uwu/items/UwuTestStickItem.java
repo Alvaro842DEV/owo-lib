@@ -6,12 +6,15 @@ import com.mojang.serialization.DataResult;
 import com.mojang.serialization.DynamicOps;
 import io.wispforest.endec.impl.KeyedEndec;
 import io.wispforest.endec.impl.StructEndecBuilder;
+import io.wispforest.endec.util.MapCarrier;
 import io.wispforest.owo.itemgroup.OwoItemGroup;
+import io.wispforest.owo.itemgroup.OwoItemSettingsExtension;
 import io.wispforest.owo.ops.WorldOps;
 import io.wispforest.endec.Endec;
 import io.wispforest.endec.SerializationContext;
 import io.wispforest.owo.serialization.CodecUtils;
 import io.wispforest.owo.serialization.RegistriesAttribute;
+import io.wispforest.owo.serialization.OwoComponentTypeBuilder;
 import io.wispforest.owo.serialization.endec.MinecraftEndecs;
 import io.wispforest.uwu.Uwu;
 import io.wispforest.uwu.text.BasedTextContent;
@@ -42,7 +45,7 @@ public class UwuTestStickItem extends Item {
     private static final ComponentType<Text> TEXT_COMPONENT = Registry.register(
             Registries.DATA_COMPONENT_TYPE,
             Identifier.of("uwu", "text"),
-            ComponentType.<Text>builder()
+            ((OwoComponentTypeBuilder<Text>) (Object) ComponentType.<Text>builder())
                     .endec(MinecraftEndecs.TEXT)
                     .build()
     );
@@ -64,14 +67,7 @@ public class UwuTestStickItem extends Item {
     private static final KeyedEndec<String> KYED = YEP_SAME_HERE.keyed("kyed", (String) null);
 
     public UwuTestStickItem(Item.Settings settings) {
-        super(settings
-                .group(() -> Uwu.SIX_TAB_GROUP).tab(3).maxCount(1)
-                .trackUsageStat()
-                .stackGenerator(OwoItemGroup.DEFAULT_STACK_GENERATOR.andThen((item, stacks) -> {
-                    final var stack = new ItemStack(item);
-                    stack.set(DataComponentTypes.CUSTOM_NAME, Text.literal("the stick of the test").styled(style -> style.withItalic(false)));
-                    stacks.add(stack);
-                })));
+        super(configureSettings(settings));
 
         Uwu.CHANNEL.registerServerbound(ThatPacket.class, StructEndecBuilder.of(YEP_SAME_HERE.fieldOf("mhmm", ThatPacket::mhmm), ThatPacket::new), (message, access) -> {
             System.out.println("that's a packet received alright: " + message.mhmm);
@@ -109,13 +105,13 @@ public class UwuTestStickItem extends Item {
 
             try {
                 var stack = context.getStack();
-                var data = stack.getOrDefault(DataComponentTypes.CUSTOM_DATA, NbtComponent.DEFAULT).copyNbt()
+                var data = ((MapCarrier) (Object) stack.getOrDefault(DataComponentTypes.CUSTOM_DATA, NbtComponent.DEFAULT).copyNbt())
                         .get(SerializationContext.attributes(RegistriesAttribute.of(context.getWorld().getRegistryManager())), KYED);
 
                 context.getPlayer().sendMessage(Text.literal("current: " + data), false);
 
                 stack.apply(DataComponentTypes.CUSTOM_DATA, NbtComponent.DEFAULT, nbt -> {
-                    return nbt.apply(nbtCompound -> nbtCompound.put(
+                    return nbt.apply(nbtCompound -> ((MapCarrier) (Object) nbtCompound).put(
                             SerializationContext.attributes(RegistriesAttribute.of(context.getWorld().getRegistryManager())),
                             KYED,
                             String.valueOf(context.getWorld().random.nextInt(10000))
@@ -150,6 +146,19 @@ public class UwuTestStickItem extends Item {
         Uwu.BREAK_BLOCK_PARTICLES.spawn(context.getWorld(), Vec3d.of(context.getBlockPos()), null);
 
         return ActionResult.SUCCESS;
+    }
+
+    private static Item.Settings configureSettings(Item.Settings settings) {
+        var extension = (OwoItemSettingsExtension) (Object) settings;
+        extension.group(() -> Uwu.SIX_TAB_GROUP);
+        extension.tab(3);
+        extension.trackUsageStat();
+        extension.stackGenerator(OwoItemGroup.DEFAULT_STACK_GENERATOR.andThen((item, stacks) -> {
+            final var stack = new ItemStack(item);
+            stack.set(DataComponentTypes.CUSTOM_NAME, Text.literal("the stick of the test").styled(style -> style.withItalic(false)));
+            stacks.add(stack);
+        }));
+        return settings.maxCount(1);
     }
 
     private record ThatPacket(String mhmm) {}
