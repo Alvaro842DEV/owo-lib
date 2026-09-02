@@ -1,6 +1,7 @@
 package io.wispforest.owo.mixin.itemgroup;
 
 import io.wispforest.owo.itemgroup.OwoItemGroup;
+import io.wispforest.owo.itemgroup.OwoItemSettingsExtension;
 import io.wispforest.owo.util.pond.OwoItemExtensions;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
@@ -30,10 +31,11 @@ public class ItemMixin implements OwoItemExtensions {
 
     @Inject(method = "<init>", at = @At("TAIL"))
     private void grabTab(Item.Settings settings, CallbackInfo ci) {
-        this.owo$tab = settings.tab();
-        this.owo$stackGenerator = settings.stackGenerator();
-        this.owo$group = settings.groupSupplier();
-        this.owo$trackUsageStat = settings.shouldTrackUsageStat();
+        var extension = (OwoItemSettingsExtension) settings;
+        this.owo$tab = extension.tab();
+        this.owo$stackGenerator = extension.stackGenerator();
+        this.owo$group = extension.groupSupplier();
+        this.owo$trackUsageStat = extension.shouldTrackUsageStat();
     }
 
     @Override

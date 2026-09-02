@@ -32,7 +32,7 @@ public class DerivedComponentMap implements ComponentMap {
     public void derive(ItemStack owner) {
         delegate.setChanges(ComponentChanges.EMPTY);
         var builder = ComponentChanges.builder();
-        owner.getItem().deriveStackComponents(owner.getComponents(), builder);
+        ((OwoItem) owner.getItem()).deriveStackComponents(owner.getComponents(), builder);
         delegate.setChanges(builder.build());
     }
 

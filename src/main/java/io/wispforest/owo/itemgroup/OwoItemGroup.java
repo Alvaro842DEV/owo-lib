@@ -146,7 +146,7 @@ public abstract class OwoItemGroup extends ItemGroup {
                 ButtonDefinition.tooltipFor(this, "tab", name),
                 contentTag == null
                         ? (context, entries) -> {}
-                        : (context, entries) -> Registries.ITEM.stream().filter(item -> item.getRegistryEntry().isIn(contentTag)).forEach(entries::add),
+                        : (context, entries) -> Registries.ITEM.stream().filter(item -> Registries.ITEM.getEntry(item).isIn(contentTag)).forEach(entries::add),
                 texture,
                 primary
         ));

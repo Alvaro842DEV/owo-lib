@@ -98,7 +98,7 @@ public abstract class CreativeInventoryScreenMixin extends HandledScreen<Creativ
     }
 
     @Inject(method = "renderTabIcon", at = @At(value = "INVOKE", target = "Lnet/minecraft/item/ItemGroup;getIcon()Lnet/minecraft/item/ItemStack;"))
-    private void renderOwoIcon(DrawContext context, ItemGroup group, CallbackInfo ci, @Local(ordinal = 3) int j, @Local(ordinal = 4) int k) {
+    private void renderOwoIcon(DrawContext context, int mouseX, int mouseY, ItemGroup group, CallbackInfo ci, @Local(ordinal = 3) int j, @Local(ordinal = 4) int k) {
         if (!(group instanceof OwoItemGroup owoGroup)) return;
 
         owoGroup.icon().render(context, j, k, 0, 0, 0);
@@ -214,7 +214,8 @@ public abstract class CreativeInventoryScreenMixin extends HandledScreen<Creativ
     @Unique
     private Consumer<ItemGroupButtonWidget> owo$createSelectAction(OwoItemGroup group, int tabIdx) {
         return button -> {
-            var context = new ItemGroup.DisplayContext(this.enabledFeatures, this.shouldShowOperatorTab(this.handler.player()), this.handler.player().getEntityWorld().getRegistryManager());
+            var player = ((io.wispforest.owo.client.screens.OwoScreenHandler) this.handler).player();
+            var context = new ItemGroup.DisplayContext(this.enabledFeatures, this.shouldShowOperatorTab(player), player.getEntityWorld().getRegistryManager());
 
             // cringe
             var shift = InputUtil.isKeyPressed(MinecraftClient.getInstance().getWindow(), GLFW.GLFW_KEY_LEFT_SHIFT)
