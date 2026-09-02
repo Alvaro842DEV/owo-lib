@@ -24,6 +24,14 @@ public class EventStream<T> {
         return this.source;
     }
 
+    public void register(T subscriber) {
+        this.addSubscriber(subscriber);
+    }
+
+    public T invoker() {
+        return this.sink;
+    }
+
     protected void addSubscriber(T subscriber) {
         this.subscribers.add(subscriber);
         this.regenerateSink();

@@ -1,7 +1,6 @@
 package io.wispforest.owo.ui.event;
 
-import net.fabricmc.fabric.api.event.Event;
-import net.fabricmc.fabric.api.event.EventFactory;
+import io.wispforest.owo.util.EventStream;
 import net.minecraft.client.MinecraftClient;
 
 public interface ClientRenderCallback {
@@ -10,7 +9,7 @@ public interface ClientRenderCallback {
      * Invoked just before the client's window enters the 'Render' phase, after the client
      * has ticked and cleared the render task queue
      */
-    Event<ClientRenderCallback> BEFORE = EventFactory.createArrayBacked(ClientRenderCallback.class, callbacks -> (client) -> {
+    EventStream<ClientRenderCallback> BEFORE = new EventStream<>(callbacks -> (client) -> {
         for (var callback : callbacks) {
             callback.onRender(client);
         }
@@ -20,7 +19,7 @@ public interface ClientRenderCallback {
      * Called just after the client has finished rendering and drawing the
      * current frame and swapped buffers
      */
-    Event<ClientRenderCallback> AFTER = EventFactory.createArrayBacked(ClientRenderCallback.class, callbacks -> (client) -> {
+    EventStream<ClientRenderCallback> AFTER = new EventStream<>(callbacks -> (client) -> {
         for (var callback : callbacks) {
             callback.onRender(client);
         }

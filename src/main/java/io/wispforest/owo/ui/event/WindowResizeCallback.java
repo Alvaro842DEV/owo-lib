@@ -1,13 +1,12 @@
 package io.wispforest.owo.ui.event;
 
-import net.fabricmc.fabric.api.event.Event;
-import net.fabricmc.fabric.api.event.EventFactory;
+import io.wispforest.owo.util.EventStream;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.util.Window;
 
 public interface WindowResizeCallback {
 
-    Event<WindowResizeCallback> EVENT = EventFactory.createArrayBacked(WindowResizeCallback.class, callbacks -> (client, window) -> {
+    EventStream<WindowResizeCallback> EVENT = new EventStream<>(callbacks -> (client, window) -> {
         for (var callback : callbacks) {
             callback.onResized(client, window);
         }
