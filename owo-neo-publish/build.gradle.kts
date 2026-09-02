@@ -30,14 +30,14 @@ repositories {
 
 dependencies {
     //implementation(rootProject)
-    api("io.wispforest:endec:0.1.8")
-    api("io.wispforest.endec:netty:0.1.4")
-    api("io.wispforest.endec:gson:0.1.5")
-    api("io.wispforest.endec:jankson:0.1.5")
+    api("io.wispforest:endec:0.1.11")
+    api("io.wispforest.endec:netty:0.1.5")
+    api("io.wispforest.endec:gson:0.1.6")
+    api("io.wispforest.endec:jankson:0.1.6")
 
     api("blue.endless:jankson:${project.property("jankson_version")}")
+    api("org.jetbrains:annotations:26.1.0")
 
-    api("org.sinytra.forgified-fabric-api:fabric-api-base:0.4.42+d1308dedd1") { exclude(group = "fabric-api")  }
 }
 
 neoForge {
