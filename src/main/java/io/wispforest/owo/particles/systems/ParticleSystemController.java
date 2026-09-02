@@ -78,7 +78,7 @@ public class ParticleSystemController {
         var instanceEndec = Endec.<ParticleSystemInstance<?>, Integer>dispatched(
             index -> {
                 @SuppressWarnings("unchecked")
-                var system = (ParticleSystem<Object>) systemsByIndex.get(index);
+                var system = (ParticleSystem<Object>) systemsByIndex.get(index.intValue());
                 return system.endec.xmap(x -> new ParticleSystemInstance<>(system, x), x -> x.data);
             },
             instance -> instance.system.index,
