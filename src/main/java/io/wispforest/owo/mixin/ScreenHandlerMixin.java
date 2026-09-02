@@ -2,6 +2,7 @@ package io.wispforest.owo.mixin;
 
 import io.netty.buffer.Unpooled;
 import io.wispforest.endec.SerializationContext;
+import io.wispforest.endec.util.EndecBuffer;
 import io.wispforest.endec.impl.ReflectiveEndecBuilder;
 import io.wispforest.owo.client.screens.OwoScreenHandler;
 import io.wispforest.owo.client.screens.ScreenInternals;
@@ -111,7 +112,7 @@ public abstract class ScreenHandlerMixin implements OwoScreenHandler, OwoScreenH
 
         var ctx = SerializationContext.attributes(RegistriesAttribute.of(this.owo$player.getRegistryManager()));
         var buf = new PacketByteBuf(Unpooled.buffer());
-        buf.write(ctx, messageData.endec(), message);
+        ((EndecBuffer) buf).write(ctx, messageData.endec(), message);
 
         var packet = new ScreenInternals.LocalPacket(messageData.id(), buf);
 
@@ -143,7 +144,7 @@ public abstract class ScreenHandlerMixin implements OwoScreenHandler, OwoScreenH
         ScreenhandlerMessageData messageData = (clientbound ? this.owo$clientboundMessages : this.owo$serverboundMessages).get(packet.packetId());
         var ctx = SerializationContext.attributes(RegistriesAttribute.of(this.owo$player.getRegistryManager()));
 
-        messageData.handler().accept(packet.payload().read(ctx, messageData.endec()));
+        messageData.handler().accept(((EndecBuffer) packet.payload()).read(ctx, messageData.endec()));
     }
 
     @Override

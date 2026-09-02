@@ -2,6 +2,7 @@ package io.wispforest.owo.client.screens;
 
 import io.wispforest.endec.Endec;
 import io.wispforest.endec.SerializationContext;
+import io.wispforest.endec.util.EndecBuffer;
 import io.wispforest.owo.serialization.RegistriesAttribute;
 import io.wispforest.owo.util.Observable;
 import net.minecraft.network.PacketByteBuf;
@@ -35,12 +36,12 @@ public class SyncedProperty<T> extends Observable<T> {
     @ApiStatus.Internal
     public void write(PacketByteBuf buf) {
         needsSync = false;
-        buf.write(serializationContext(), this.endec, value);
+        ((EndecBuffer) buf).write(serializationContext(), this.endec, value);
     }
 
     @ApiStatus.Internal
     public void read(PacketByteBuf buf) {
-        this.set(buf.read(serializationContext(), this.endec));
+        this.set(((EndecBuffer) buf).read(serializationContext(), this.endec));
     }
 
     @Override
@@ -55,7 +56,7 @@ public class SyncedProperty<T> extends Observable<T> {
     }
 
     private SerializationContext serializationContext() {
-        var player = this.owner.player();
+        var player = ((OwoScreenHandler) this.owner).player();
         if (player == null) return SerializationContext.empty();
 
         return SerializationContext.attributes(RegistriesAttribute.of(player.getRegistryManager()));

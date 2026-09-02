@@ -120,7 +120,7 @@ public class NbtSerializer extends RecursiveSerializer<NbtElement> implements Se
             frameData.setValue(compound);
         });
 
-        this.consume(frameData.getValue());
+        this.consume(frameData.get());
     }
 
     // ---

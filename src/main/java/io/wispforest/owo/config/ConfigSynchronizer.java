@@ -7,6 +7,7 @@ import io.wispforest.owo.Owo;
 import io.wispforest.owo.mixin.ServerCommonNetworkHandlerAccessor;
 import io.wispforest.owo.ops.TextOps;
 import io.wispforest.endec.Endec;
+import io.wispforest.endec.util.EndecBuffer;
 import io.wispforest.owo.serialization.CodecUtils;
 import io.wispforest.owo.serialization.endec.MinecraftEndecs;
 import net.minecraft.client.MinecraftClient;
@@ -174,7 +175,7 @@ public class ConfigSynchronizer {
 
         read(payload, (option, optionBuf) -> {
             var config = CLIENT_OPTION_STORAGE.computeIfAbsent(connection, $ -> new HashMap<>()).computeIfAbsent(option.configName(), s -> new HashMap<>());
-            config.put(option.key(), optionBuf.read(option.endec()));
+            config.put(option.key(), ((EndecBuffer) optionBuf).read(option.endec()));
         });
     }
 

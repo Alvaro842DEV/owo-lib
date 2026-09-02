@@ -138,14 +138,14 @@ public class OwoNetChannel {
         }
 
         Endec<MessagePayload> serverEndec = Endec.<Record, Integer>dispatched(
-            index -> this.endecsByIndex.get(index).endec,
+            index -> this.endecsByIndex.get(index.intValue()).endec,
             msg -> this.endecsByClass.get(msg.getClass()).serverHandlerIndex,
             Endec.VAR_INT
         )
             .xmap(x -> new MessagePayload(this.packetId, x), x -> x.message);
 
         Endec<MessagePayload> clientEndec = Endec.<Record, Integer>dispatched(
-                index -> this.endecsByIndex.get(-index).endec,
+                index -> this.endecsByIndex.get(-index.intValue()).endec,
                 msg -> this.endecsByClass.get(msg.getClass()).clientHandlerIndex,
                 Endec.VAR_INT
             )
@@ -606,4 +606,3 @@ public class OwoNetChannel {
         }
     }
 }
-

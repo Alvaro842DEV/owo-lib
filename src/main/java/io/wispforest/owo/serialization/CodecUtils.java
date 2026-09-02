@@ -39,6 +39,7 @@ import net.minecraft.network.RegistryByteBuf;
 import net.minecraft.network.codec.PacketCodec;
 import net.minecraft.registry.RegistryOps;
 import net.minecraft.util.dynamic.ForwardingDynamicOps;
+import net.neoforged.neoforge.network.connection.ConnectionType;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Nullable;
 
@@ -132,7 +133,7 @@ public class CodecUtils {
         return Endec.of(
             (ctx, serializer, value) -> {
                 if (serializer instanceof ByteBufSerializer<?>) {
-                    var buffer = new RegistryByteBuf(new PacketByteBuf(Unpooled.buffer()), ctx.requireAttributeValue(RegistriesAttribute.REGISTRIES).registryManager());
+                    var buffer = new RegistryByteBuf(new PacketByteBuf(Unpooled.buffer()), ctx.requireAttributeValue(RegistriesAttribute.REGISTRIES).registryManager(), ConnectionType.OTHER);
 
                     packetCodec.encode(buffer, value);
 
@@ -146,7 +147,8 @@ public class CodecUtils {
                     return packetCodec.decode(
                         new RegistryByteBuf(
                             MinecraftEndecs.PACKET_BYTE_BUF.decode(ctx, deserializer),
-                            ctx.requireAttributeValue(RegistriesAttribute.REGISTRIES).registryManager()
+                            ctx.requireAttributeValue(RegistriesAttribute.REGISTRIES).registryManager(),
+                            ConnectionType.OTHER
                         ));
                 } else {
                     return decoder.decode(ctx, deserializer);
