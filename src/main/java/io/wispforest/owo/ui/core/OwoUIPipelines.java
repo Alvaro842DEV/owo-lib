@@ -42,8 +42,12 @@ public final class OwoUIPipelines {
         .withVertexFormat(VertexFormats.POSITION_COLOR, VertexFormat.DrawMode.TRIANGLE_STRIP)
         .build();
 
-    public static final RenderPipeline GUI_TEXTURED_NO_BLEND = RenderPipeline.builder(RenderPipelines.POSITION_TEX_COLOR_SNIPPET)
+    public static final RenderPipeline GUI_TEXTURED_NO_BLEND = RenderPipeline.builder(RenderPipelines.TRANSFORMS_AND_PROJECTION_SNIPPET)
         .withLocation(Identifier.of("owo", "pipeline/gui_textured"))
+        .withVertexShader(Identifier.of("owo", "core/position_tex_color"))
+        .withFragmentShader(Identifier.of("owo", "core/position_tex_color"))
+        .withSampler("Sampler0")
+        .withVertexFormat(VertexFormats.POSITION_TEXTURE_COLOR, VertexFormat.DrawMode.QUADS)
         .withoutBlend()
         .build();
 

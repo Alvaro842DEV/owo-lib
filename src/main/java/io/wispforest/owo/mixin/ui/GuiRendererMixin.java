@@ -5,6 +5,7 @@ import com.llamalad7.mixinextras.sugar.Local;
 import com.mojang.blaze3d.buffers.GpuBuffer;
 import com.mojang.blaze3d.systems.RenderPass;
 import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.blaze3d.textures.FilterMode;
 import com.mojang.blaze3d.vertex.VertexFormat;
 import io.wispforest.owo.mixin.neoforge.ValidationCommandEncoderAccessor;
 import io.wispforest.owo.mixin.ui.access.GlCommandEncoderAccessor;
@@ -73,7 +74,7 @@ public class GuiRendererMixin {
         ((GlCommandEncoderAccessor) baseEncoder).owo$setRenderPassOpen(true);
 
         pass.setUniform("BlurSettings", uniforms);
-        pass.bindSampler("InputSampler", BlurQuadElementRenderState.inputView);
+        pass.bindTexture("InputSampler", BlurQuadElementRenderState.inputView, RenderSystem.getSamplerCache().get(FilterMode.LINEAR));
     }
 
     @ModifyExpressionValue(method = "prepareSimpleElement", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/texture/TextureSetup;equals(Ljava/lang/Object;)Z"))

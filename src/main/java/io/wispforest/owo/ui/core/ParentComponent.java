@@ -151,14 +151,14 @@ public interface ParentComponent extends Component {
             if (nextParent != null && current.parent() != nextParent) break;
             if (!current.shouldDrawTooltip(mouseX, mouseY)) continue;
 
-            context.push();
+            context.getMatrices().pushMatrix();
             for (; i >= 0; i--) {
                 if (i > 0 && hoveredDescendants.get(i).parent() != hoveredDescendants.get(i - 1)) break;
-                context.translate(0, 0);
+                context.getMatrices().translate(0, 0);
             }
 
             current.drawTooltip(context, mouseX, mouseY, partialTicks, delta);
-            context.pop();
+            context.getMatrices().popMatrix();
 
             break;
         }

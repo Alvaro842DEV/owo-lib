@@ -39,8 +39,8 @@ public class OwoUIDrawContext extends DrawContext {
 
     private final Consumer<Runnable> setTooltipDrawer;
 
-    private OwoUIDrawContext(MinecraftClient client, GuiRenderState renderState, Consumer<Runnable> setTooltipDrawer) {
-        super(client, renderState);
+    private OwoUIDrawContext(MinecraftClient client, GuiRenderState renderState, int mouseX, int mouseY, Consumer<Runnable> setTooltipDrawer) {
+        super(client, renderState, mouseX, mouseY);
         this.setTooltipDrawer = setTooltipDrawer;
     }
 
@@ -48,6 +48,8 @@ public class OwoUIDrawContext extends DrawContext {
         var owoContext = new OwoUIDrawContext(
             MinecraftClient.getInstance(),
             context.state,
+            ((DrawContextAccessor) context).owo$getMouseX(),
+            ((DrawContextAccessor) context).owo$getMouseY(),
             ((DrawContextAccessor) context)::owo$setTooltipDrawer
         );
 
@@ -62,7 +64,7 @@ public class OwoUIDrawContext extends DrawContext {
     }
 
     public boolean intersectsScissor(PositionedRectangle other) {
-        other = other.transform(getMatrixStack());
+        other = other.transform(this.getMatrices());
 
         var rect = this.scissorStack.peekLast();
 
@@ -363,11 +365,7 @@ public class OwoUIDrawContext extends DrawContext {
                 INSTANCE = new UtilityScreen();
 
                 final var client = MinecraftClient.getInstance();
-                INSTANCE.init(
-                    client,
-                    client.getWindow().getScaledWidth(),
-                    client.getWindow().getScaledHeight()
-                );
+                INSTANCE.init(client.getWindow().getScaledWidth(), client.getWindow().getScaledHeight());
             }
 
             return INSTANCE;
@@ -404,15 +402,18 @@ public class OwoUIDrawContext extends DrawContext {
          * (which, here, would be the utility screen which is not what we want), either {@link #captureLinkSource()}
          * or {@link #setLinkSource(Screen)} must be called prior to invoking this method
          */
-        @Override
         public boolean handleTextClick(Style style) {
-            return super.handleTextClick(style);
+            var clickEvent = style.getClickEvent();
+            if (clickEvent == null) return false;
+
+            handleClickEvent(clickEvent, this.client, this);
+            return true;
         }
 
         static {
             WindowResizeCallback.EVENT.register((client, window) -> {
                 if (INSTANCE == null) return;
-                INSTANCE.init(client, window.getScaledWidth(), window.getScaledHeight());
+                INSTANCE.init(window.getScaledWidth(), window.getScaledHeight());
             });
         }
     }

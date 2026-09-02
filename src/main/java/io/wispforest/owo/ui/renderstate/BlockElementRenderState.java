@@ -13,6 +13,8 @@ import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.block.entity.state.BlockEntityRenderState;
 import net.minecraft.client.render.state.CameraRenderState;
 import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.EmptyBlockRenderView;
 import net.minecraft.util.math.RotationAxis;
 import org.jetbrains.annotations.Nullable;
 
@@ -86,9 +88,10 @@ public record BlockElementRenderState(
             matrices.translate(-.5, -.5, -.5);
 
             if (state.state.getRenderType() != BlockRenderType.INVISIBLE) {
-                MinecraftClient.getInstance().getBlockRenderManager().renderBlockAsEntity(
+                MinecraftClient.getInstance().getBlockRenderManager().renderSingleBlock(
                     state.state, matrices, vertexConsumers,
-                    LightmapTextureManager.MAX_LIGHT_COORDINATE, OverlayTexture.DEFAULT_UV
+                    LightmapTextureManager.MAX_LIGHT_COORDINATE, OverlayTexture.DEFAULT_UV,
+                    EmptyBlockRenderView.INSTANCE, BlockPos.ORIGIN
                 );
             }
 
