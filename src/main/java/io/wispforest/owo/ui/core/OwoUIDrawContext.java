@@ -20,6 +20,7 @@ import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.tooltip.HoveredTooltipPositioner;
 import net.minecraft.client.gui.tooltip.TooltipComponent;
 import net.minecraft.client.gui.tooltip.TooltipPositioner;
+import net.minecraft.text.ClickEvent;
 import net.minecraft.text.Style;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
@@ -398,15 +399,36 @@ public class OwoUIDrawContext extends DrawContext {
         }
 
         /**
-         * Since the vanilla implementation of this method always returns to the screen the method was invoked on
-         * (which, here, would be the utility screen which is not what we want), either {@link #captureLinkSource()}
-         * or {@link #setLinkSource(Screen)} must be called prior to invoking this method
+         * Dispatches using the source set by {@link #captureLinkSource()} or
+         * {@link #setLinkSource(Screen)}, falling back to the current screen.
+         * Vanilla retains that screen while a link confirmation is open
+         * Basic actions work without a player. Player dependent actions are rejected
+         * when no player is available
+         *
+         * return whether the action was handled, and false for disabled URLs,
+         * unsupported actions or player dependent actions without a player
          */
         public boolean handleTextClick(Style style) {
             var clickEvent = style.getClickEvent();
             if (clickEvent == null) return false;
 
-            handleClickEvent(clickEvent, this.client, this);
+            // Vanilla retains this screen in the confirmation callback.
+            // Use the captured source screen instead of the utility screen or any temporary state
+            var returnScreen = this.linkSourceScreen != null ? this.linkSourceScreen : this.client.currentScreen;
+            if (clickEvent instanceof ClickEvent.OpenUrl openUrl) {
+                return handleOpenUri(this.client, returnScreen, openUrl.uri());
+            } else if (clickEvent instanceof ClickEvent.OpenFile
+                    || clickEvent instanceof ClickEvent.SuggestCommand
+                    || clickEvent instanceof ClickEvent.CopyToClipboard) {
+                handleBasicClickEvent(clickEvent, this.client, returnScreen);
+            } else if (clickEvent instanceof ClickEvent.RunCommand
+                    || clickEvent instanceof ClickEvent.ShowDialog
+                    || clickEvent instanceof ClickEvent.Custom) {
+                if (this.client.player == null) return false;
+                handleClickEvent(clickEvent, this.client, returnScreen);
+            } else {
+                return false;
+            }
             return true;
         }
 

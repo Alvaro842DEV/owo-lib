@@ -3,12 +3,9 @@ package io.wispforest.owo.mixin.ui;
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import io.wispforest.owo.ui.base.BaseOwoHandledScreen;
 import io.wispforest.owo.ui.base.BaseOwoScreen;
-import io.wispforest.owo.ui.core.OwoUIDrawContext;
 import net.minecraft.client.gui.screen.Screen;
-import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.ModifyArg;
 
 @Mixin(Screen.class)
 public class ScreenMixin {
@@ -23,8 +20,4 @@ public class ScreenMixin {
         return original;
     }
 
-    @ModifyArg(method = "method_71845", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/MinecraftClient;setScreen(Lnet/minecraft/client/gui/screen/Screen;)V"), index = 0)
-    private static @Nullable Screen injectProperLinkSource(@Nullable Screen screen) {
-        return OwoUIDrawContext.utilityScreen().getAndClearLinkSource();
-    }
 }
