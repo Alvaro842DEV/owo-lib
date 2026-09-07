@@ -104,6 +104,10 @@ repositories {
 }
 
 sourceSets {
+    regressionTest {
+        compileClasspath += main.output
+        runtimeClasspath += main.output
+    }
     testmod {
         runtimeClasspath += main.runtimeClasspath
         compileClasspath += main.compileClasspath
@@ -184,4 +188,16 @@ javadoc {
     options.tags = ["apiNote", "implNote", "implSpec"]
     options.addStringOption("Xdoclint:-missing", "-quiet")
     options.encoding = 'UTF-8'
+}
+
+tasks.register('eventStreamRegressionTest', JavaExec) {
+    group = 'verification'
+    description = 'Checks subscriber changes during event dispatch without starting Minecraft'
+    dependsOn tasks.named('regressionTestClasses')
+    classpath = sourceSets.regressionTest.runtimeClasspath
+    mainClass = 'io.wispforest.owo.util.EventStreamRegressionTest'
+}
+
+tasks.named('check') {
+    dependsOn tasks.named('eventStreamRegressionTest')
 }
