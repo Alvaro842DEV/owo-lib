@@ -43,7 +43,7 @@ public class EventStream<T> {
     }
 
     protected void regenerateSink() {
-        this.sink = this.sinkFactory.apply(this.subscribers);
+        this.sink = this.sinkFactory.apply(List.copyOf(this.subscribers));
     }
 
 }
