@@ -123,6 +123,9 @@ loom {
     runs {
         testmodClient {
             client()
+            if (project.hasProperty('portRegressionChecks')) {
+                vmArg '-Dowo.portRegressionChecks=true'
+            }
             ideConfigGenerated project.rootProject == project
             name = "Testmod Client"
             mods {

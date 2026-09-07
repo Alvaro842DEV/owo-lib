@@ -53,6 +53,7 @@ import java.util.function.Supplier;
 public class UwuClient {
 
     public UwuClient(IEventBus modBus) {
+        PortRegressionChecks.install();
         UwuNetworkExample.Client.init(modBus);
         UwuOptionalNetExample.Client.init(modBus);
 
