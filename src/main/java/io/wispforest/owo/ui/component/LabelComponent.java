@@ -241,11 +241,11 @@ public class LabelComponent extends BaseComponent {
     @Nullable
     protected Style styleAt(int mouseX, int mouseY) {
         var line = this.wrappedText.get(Math.min(mouseY / (this.lineHeight() + this.lineSpacing()), this.wrappedText.size() - 1));
-        var width = new int[]{0};
+        var width = new float[]{0};
         var result = new Style[]{null};
 
         line.accept((index, style, codePoint) -> {
-            width[0] += this.textRenderer.getWidth(OrderedText.styled(codePoint, style));
+            width[0] += this.textRenderer.getTextHandler().getWidth(OrderedText.styled(codePoint, style));
             if (width[0] <= mouseX) return true;
 
             result[0] = style;
